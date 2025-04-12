@@ -5,17 +5,17 @@ import (
 	"testing"
 
 	"github.com/orzkratos/astkratos"
+	"github.com/orzkratos/demokratos"
 	"github.com/stretchr/testify/require"
 	"github.com/yyle88/neatjson/neatjsons"
 	"github.com/yyle88/osexistpath/osmustexist"
-	"github.com/yyle88/runpath"
 	"github.com/yyle88/zaplog"
 )
 
 var projectPath string
 
 func TestMain(m *testing.M) {
-	projectPath = osmustexist.ROOT(runpath.PARENT.Join("astkratos-demo1project"))
+	projectPath = osmustexist.ROOT(demokratos.GetDemo1Path())
 	zaplog.SUG.Debugln(projectPath)
 	m.Run()
 }
