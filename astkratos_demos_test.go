@@ -1,12 +1,15 @@
 package astkratos_demos
 
 import (
+	"math/rand/v2"
 	"path/filepath"
 	"testing"
 
 	"github.com/orzkratos/astkratos"
-	"github.com/orzkratos/demokratos"
+	"github.com/orzkratos/demokratos/demo1kratos"
+	"github.com/orzkratos/demokratos/demo2kratos"
 	"github.com/stretchr/testify/require"
+	"github.com/yyle88/must"
 	"github.com/yyle88/neatjson/neatjsons"
 	"github.com/yyle88/osexistpath/osmustexist"
 	"github.com/yyle88/zaplog"
@@ -15,8 +18,17 @@ import (
 var projectPath string
 
 func TestMain(m *testing.M) {
-	projectPath = osmustexist.ROOT(demokratos.GetDemo1Path())
-	zaplog.SUG.Debugln(projectPath)
+	const demo1 = "demo1"
+	const demo2 = "demo2"
+	choices := []string{demo1, demo2}
+	switch choices[rand.IntN(len(choices))] {
+	case demo1:
+		projectPath = osmustexist.ROOT(demo1kratos.SourceRoot())
+	case demo2:
+		projectPath = osmustexist.ROOT(demo2kratos.SourceRoot())
+	}
+	zaplog.SUG.Debugln(must.Nice(projectPath))
+
 	m.Run()
 }
 
