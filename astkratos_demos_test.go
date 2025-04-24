@@ -18,13 +18,10 @@ import (
 var projectPath string
 
 func TestMain(m *testing.M) {
-	const demo1 = "demo1"
-	const demo2 = "demo2"
-	choices := []string{demo1, demo2}
-	switch choices[rand.IntN(len(choices))] {
-	case demo1:
+	switch rand.IntN(2) {
+	case 0:
 		projectPath = osmustexist.ROOT(demo1kratos.SourceRoot())
-	case demo2:
+	case 1:
 		projectPath = osmustexist.ROOT(demo2kratos.SourceRoot())
 	}
 	zaplog.SUG.Debugln(must.Nice(projectPath))
