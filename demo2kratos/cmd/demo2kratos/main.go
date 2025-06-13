@@ -12,6 +12,7 @@ import (
 	"github.com/go-kratos/kratos/v2/transport/grpc"
 	"github.com/go-kratos/kratos/v2/transport/http"
 	"github.com/orzkratos/demokratos/demo2kratos/internal/conf"
+	"github.com/yyle88/done"
 	"github.com/yyle88/rese"
 	_ "go.uber.org/automaxprocs"
 )
@@ -24,8 +25,6 @@ var (
 	Version string
 	// flagconf is the config flag.
 	flagconf string
-
-	id, _ = os.Hostname()
 )
 
 func init() {
@@ -34,7 +33,7 @@ func init() {
 
 func newApp(logger log.Logger, gs *grpc.Server, hs *http.Server) *kratos.App {
 	return kratos.New(
-		kratos.ID(id),
+		kratos.ID(done.VCE(os.Hostname()).Omit()),
 		kratos.Name(Name),
 		kratos.Version(Version),
 		kratos.Metadata(map[string]string{}),
@@ -51,7 +50,7 @@ func main() {
 	logger := log.With(log.NewStdLogger(os.Stdout),
 		"ts", log.DefaultTimestamp,
 		"caller", log.DefaultCaller,
-		"service.id", id,
+		"service.id", done.VCE(os.Hostname()).Omit(),
 		"service.name", Name,
 		"service.version", Version,
 		"trace.id", tracing.TraceID(),

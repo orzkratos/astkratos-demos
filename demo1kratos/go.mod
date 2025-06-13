@@ -5,14 +5,15 @@ go 1.22.8
 require (
 	github.com/go-kratos/kratos/v2 v2.8.4
 	github.com/google/wire v0.6.0
-	github.com/orzkratos/astkratos v0.0.10
+	github.com/orzkratos/astkratos v0.0.11
 	github.com/stretchr/testify v1.10.0
-	github.com/yyle88/must v0.0.23
+	github.com/yyle88/done v1.0.26
+	github.com/yyle88/must v0.0.25
 	github.com/yyle88/neatjson v0.0.12
 	github.com/yyle88/osexistpath v0.0.17
 	github.com/yyle88/rese v0.0.10
 	github.com/yyle88/runpath v1.0.23
-	github.com/yyle88/zaplog v0.0.22
+	github.com/yyle88/zaplog v0.0.24
 	go.uber.org/automaxprocs v1.6.0
 	google.golang.org/genproto/googleapis/api v0.0.0-20250106144421-5f5ef82da422
 	google.golang.org/grpc v1.71.1
@@ -20,26 +21,25 @@ require (
 )
 
 require (
-	dario.cat/mergo v1.0.1 // indirect
+	dario.cat/mergo v1.0.2 // indirect
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc // indirect
-	github.com/fsnotify/fsnotify v1.6.0 // indirect
+	github.com/fsnotify/fsnotify v1.9.0 // indirect
 	github.com/go-kratos/aegis v0.2.0 // indirect
-	github.com/go-logr/logr v1.4.2 // indirect
+	github.com/go-logr/logr v1.4.3 // indirect
 	github.com/go-logr/stdr v1.2.2 // indirect
 	github.com/go-playground/form/v4 v4.2.1 // indirect
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/gorilla/mux v1.8.1 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/pmezard/go-difflib v1.0.1-0.20181226105442-5d4384ee4fb2 // indirect
-	github.com/yyle88/done v1.0.25 // indirect
-	github.com/yyle88/erero v1.0.20 // indirect
-	github.com/yyle88/eroticgo v0.0.3 // indirect
+	github.com/yyle88/erero v1.0.21 // indirect
+	github.com/yyle88/eroticgo v0.0.4 // indirect
 	github.com/yyle88/mutexmap v1.0.13 // indirect
-	github.com/yyle88/osexec v0.0.25 // indirect
+	github.com/yyle88/osexec v0.0.31 // indirect
 	github.com/yyle88/printgo v1.0.5 // indirect
 	github.com/yyle88/sure v0.0.38 // indirect
-	github.com/yyle88/syntaxgo v0.0.48 // indirect
-	github.com/yyle88/tern v0.0.6 // indirect
+	github.com/yyle88/syntaxgo v0.0.52 // indirect
+	github.com/yyle88/tern v0.0.8 // indirect
 	go.opentelemetry.io/auto/sdk v1.1.0 // indirect
 	go.opentelemetry.io/otel v1.34.0 // indirect
 	go.opentelemetry.io/otel/metric v1.34.0 // indirect
