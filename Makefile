@@ -26,21 +26,23 @@ merge-step3:
 
 merge-step4:
 	git merge upstream/main
+	git status
 
 merge-step5:
-	go mod tidy -e
-	cd demo1kratos && go mod tidy -e
-	cd demo2kratos && go mod tidy -e
-
-merge-step6:
-	go clean -testcache && go test -v ./...
-	cd demo1kratos && go clean -testcache && go test -v ./...
-	cd demo2kratos && go clean -testcache && go test -v ./...
-
-merge-step7:
 	depbump
 	cd demo1kratos && depbump directs
 	cd demo1kratos && depbump directs
+
+merge-step6:
+	go clean -testcache
+	go test -v ./...
+	cd demo1kratos && go test -v ./...
+	cd demo2kratos && go test -v ./...
+
+merge-step7:
+	go mod tidy -e
+	cd demo1kratos && go mod tidy -e
+	cd demo2kratos && go mod tidy -e
 
 merge-step8:
 	go-lint

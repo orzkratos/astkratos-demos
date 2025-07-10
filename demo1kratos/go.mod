@@ -13,7 +13,7 @@ require (
 	github.com/yyle88/osexistpath v0.0.17
 	github.com/yyle88/rese v0.0.10
 	github.com/yyle88/runpath v1.0.23
-	github.com/yyle88/zaplog v0.0.24
+	github.com/yyle88/zaplog v0.0.26
 	go.uber.org/automaxprocs v1.6.0
 	google.golang.org/genproto/googleapis/api v0.0.0-20250106144421-5f5ef82da422
 	google.golang.org/grpc v1.71.1
@@ -32,13 +32,13 @@ require (
 	github.com/gorilla/mux v1.8.1 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/pmezard/go-difflib v1.0.1-0.20181226105442-5d4384ee4fb2 // indirect
-	github.com/yyle88/erero v1.0.21 // indirect
+	github.com/yyle88/erero v1.0.23 // indirect
 	github.com/yyle88/eroticgo v0.0.4 // indirect
-	github.com/yyle88/mutexmap v1.0.13 // indirect
+	github.com/yyle88/mutexmap v1.0.14 // indirect
 	github.com/yyle88/osexec v0.0.31 // indirect
 	github.com/yyle88/printgo v1.0.5 // indirect
-	github.com/yyle88/sure v0.0.38 // indirect
-	github.com/yyle88/syntaxgo v0.0.52 // indirect
+	github.com/yyle88/sure v0.0.39 // indirect
+	github.com/yyle88/syntaxgo v0.0.53 // indirect
 	github.com/yyle88/tern v0.0.8 // indirect
 	go.opentelemetry.io/auto/sdk v1.1.0 // indirect
 	go.opentelemetry.io/otel v1.34.0 // indirect
@@ -53,6 +53,5 @@ require (
 	golang.org/x/text v0.22.0 // indirect
 	golang.org/x/tools v0.30.0 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20250115164207-1a7da9e5054f // indirect
-	gopkg.in/natefinch/lumberjack.v2 v2.2.1 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
