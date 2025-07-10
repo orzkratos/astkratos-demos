@@ -35,7 +35,7 @@ require (
 	github.com/yyle88/erero v1.0.23 // indirect
 	github.com/yyle88/eroticgo v0.0.4 // indirect
 	github.com/yyle88/mutexmap v1.0.14 // indirect
-	github.com/yyle88/osexec v0.0.31 // indirect
+	github.com/yyle88/osexec v0.0.32 // indirect
 	github.com/yyle88/printgo v1.0.5 // indirect
 	github.com/yyle88/sure v0.0.39 // indirect
 	github.com/yyle88/syntaxgo v0.0.53 // indirect
