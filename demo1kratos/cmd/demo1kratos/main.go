@@ -13,6 +13,7 @@ import (
 	"github.com/go-kratos/kratos/v2/transport/http"
 	"github.com/orzkratos/demokratos/demo1kratos/internal/conf"
 	"github.com/yyle88/done"
+	"github.com/yyle88/must"
 	"github.com/yyle88/rese"
 	_ "go.uber.org/automaxprocs"
 )
@@ -63,23 +64,14 @@ func main() {
 	)
 	defer rese.F0(c.Close)
 
-	if err := c.Load(); err != nil {
-		panic(err)
-	}
+	must.Done(c.Load())
 
-	var bc conf.Bootstrap
-	if err := c.Scan(&bc); err != nil {
-		panic(err)
-	}
+	var cfg conf.Bootstrap
+	must.Done(c.Scan(&cfg))
 
-	app, cleanup, err := wireApp(bc.Server, bc.Data, logger)
-	if err != nil {
-		panic(err)
-	}
+	app, cleanup := rese.V2(wireApp(cfg.Server, cfg.Data, logger))
 	defer cleanup()
 
 	// start and wait for stop signal
-	if err := app.Run(); err != nil {
-		panic(err)
-	}
+	must.Done(app.Run())
 }
