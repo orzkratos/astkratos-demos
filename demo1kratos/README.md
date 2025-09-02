@@ -1,5 +1,15 @@
 # Kratos Project Template
 
+## Go 1.25+ Optimizations
+
+This project uses Go 1.25.0+ with built-in container-aware GOMAXPROCS feature. The `go.uber.org/automaxprocs` package has been removed since Go 1.25+ now:
+
+- Detects container CPU limits and quotas
+- Auto adjusts GOMAXPROCS to match container resources
+- Provides better performance in containerized environments without external dependencies
+
+See the [Go 1.25 release notes](https://tip.golang.org/doc/go1.25) to learn more.
+
 ## Install Kratos
 ```
 go install github.com/go-kratos/kratos/cmd/kratos/v2@latest

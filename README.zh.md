@@ -4,7 +4,7 @@
 
 ## 英文文档
 
-[English README](README.md)
+[ENGLISH README](README.md)
 
 # go-kratos
 

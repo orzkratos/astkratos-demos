@@ -1,22 +1,45 @@
-# 这些是该组织内的其他工具，也都是服务于kratos项目的，能够方便你的开发和使用，当然主要是我自己用
-init:
-	# 这个工具能够让你方便的添加proto文件
-	go install github.com/orzkratos/orzkratos/cmd/orzkratos-add-proto@latest
-	# 这个工具能够让你的service实现和proto接口保持同步修改，使用前请先做好代码备份或者提交代码
-	go install github.com/orzkratos/orzkratos/cmd/orzkratos-srv-proto@latest
-	# 这个工具能让项目升级依赖包
-	go install github.com/go-mate/depbump/cmd/depbump@latest
-	# 这个工具用于项目的静态检查
-	go install github.com/go-mate/go-lint/cmd/go-lint@latest
+# ========================================
+# 开始你的 Kratos 开发之旅吧
+# ========================================
 
+# 这些是我专为 Kratos 项目打造的效率工具，让开发变得更轻松愉快！请运行 make init 安装
+init:
+	@echo "正在安装 Kratos 相关的开发工具链..."
+	# orzkratos-add-proto: 告别繁琐的 proto 文件手动创建！
+	# 使用方法: 在 api/helloworld/ 目录下运行 orzkratos-add-proto demo.proto
+	go install github.com/orzkratos/orzkratos/cmd/orzkratos-add-proto@latest
+	# orzkratos-srv-proto: 自动同步神器，让你的服务实现与 proto 接口始终保持一致
+	# 重要提醒: 使用前请务必备份代码或提交到 git，因为会直接修改源文件
+	go install github.com/orzkratos/orzkratos/cmd/orzkratos-srv-proto@latest
+	# depbump: 一键升级所有依赖包，告别版本管理烦恼
+	go install github.com/go-mate/depbump/cmd/depbump@latest
+	# go-lint: 代码质量守护者，自动格式化 + 静态检查
+	go install github.com/go-mate/go-lint/cmd/go-lint@latest
+	@echo "✅ 工具安装完成！现在可以开始愉快地开发啦"
+
+# 构建所有演示项目，包括 proto 生成、配置文件处理、代码生成等
 all:
+	@echo "开始构建所有演示项目..."
 	cd demo1kratos && make all
 	cd demo2kratos && make all
+	@echo "✅ 所有项目构建完成！"
 
-# 当你的kratos项目在proto里新增接口时，通过这个命令能够在对应的服务里也增加函数逻辑，在删除接口时也能把服务代码改为非导出的，以下是使用样例
+# ========================================
+# 魔法命令 make orz - 自动同步 Proto 代码与服务
+# ========================================
+# 这是最强大的功能！当你修改 proto 文件后，运行这个命令：
+# 新增接口 → 自动在服务层添加对应的函数实现（新增个空函数，需要您实现函数内部逻辑）
+# 删除接口 → 自动将服务代码中对应的方法改为非导出的（避免编译错误）
+# 函数排序 → 根据你 proto 里定义的函数顺序重新排列服务里的实现代码
+# 使用场景举例:
+#   1. 在 proto 文件中新增了 CreateUser 接口
+#   2. 运行 make orz
+#   3. 服务层自动生成 CreateUser 方法框架，你只需要填充业务逻辑！
 orz:
-	cd demo1kratos && orzkratos-srv-proto -auto
-	cd demo2kratos && orzkratos-srv-proto -auto
+	@echo "开始执行 Proto-Service 自动同步函数..."
+	cd demo1kratos && make all && orzkratos-srv-proto -auto
+	cd demo2kratos && make all && orzkratos-srv-proto -auto
+	@echo "✅ 同步完成！请检查生成的代码并完善业务逻辑"
 
 # ========================================
 # 同步上游仓库最新修改到 fork 项目的完整流程
@@ -81,11 +104,15 @@ merge-step6:
 		if git diff --name-only --diff-filter=U | grep -q .; then \
 			echo "⚠️  发现未解决的冲突文件："; \
 			git diff --name-only --diff-filter=U; \
-			echo "请手动解决所有冲突后再执行此步骤"; \
+			echo "请手动解决所有冲突后再执行此步骤！"; \
+			echo "解决完冲突以后请手动添加这些文件："; \
+			for file in $$(git diff --name-only --diff-filter=U); do \
+				echo "  git add $$file"; \
+			done; \
+			echo "或者添加全部：git add -A"; \
 			exit 1; \
 		else \
 			echo "已解决所有冲突，继续合并代码"; \
-			git add -A; \
 			git merge --continue; \
 		fi; \
 	else \
@@ -107,8 +134,7 @@ merge-step7:
 
 merge-step8:
 	# 检查是否有依赖升级的变动，如果有则单独提交
-	git add -A
-	git diff --cached --quiet || git commit -m "简单升级依赖包"
+	git diff --quiet || (git add -A && git commit -m "简单升级依赖包")
 	git status
 	@echo "✅ 已提交依赖升级变动（如果有的话）"
 

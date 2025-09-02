@@ -14,8 +14,8 @@ Some demo projects of using Go-Kratos framework
 
 The project includes two demos to showcase the usage of various features:
 
-- [Demo1](demo1kratos)
-- [Demo2](demo2kratos)
+- [Demo1](./demo1kratos)
+- [Demo2](./demo2kratos)
 
 We provide a code comparison between Demo1 and Demo2, highlighting the changed code blocks.
 

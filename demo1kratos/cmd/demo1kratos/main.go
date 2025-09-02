@@ -15,7 +15,6 @@ import (
 	"github.com/yyle88/done"
 	"github.com/yyle88/must"
 	"github.com/yyle88/rese"
-	_ "go.uber.org/automaxprocs"
 )
 
 // go build -ldflags "-X main.Version=x.y.z"
