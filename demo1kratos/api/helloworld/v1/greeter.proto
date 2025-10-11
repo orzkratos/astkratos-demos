@@ -12,7 +12,7 @@ option java_outer_classname = "HelloworldProtoV1";
 // The greeting service definition.
 service Greeter {
   // Sends a greeting
-  rpc SayHello (HelloRequest) returns (HelloReply) {
+  rpc SayHello(HelloRequest) returns (HelloReply) {
     option (google.api.http) = {
       get: "/helloworld/{name}"
     };

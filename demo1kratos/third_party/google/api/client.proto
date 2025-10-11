@@ -24,7 +24,6 @@ option java_outer_classname = "ClientProto";
 option java_package = "com.google.api";
 option objc_class_prefix = "GAPI";
 
-
 extend google.protobuf.ServiceOptions {
   // The hostname for this service.
   // This should be specified with no prefix or protocol.
@@ -59,7 +58,6 @@ extend google.protobuf.ServiceOptions {
   //   }
   string oauth_scopes = 1050;
 }
-
 
 extend google.protobuf.MethodOptions {
   // A definition of a client library method signature.
