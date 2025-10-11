@@ -14,7 +14,7 @@ require (
 	github.com/yyle88/rese v0.0.11
 	github.com/yyle88/runpath v1.0.24
 	github.com/yyle88/zaplog v0.0.27
-	google.golang.org/genproto/googleapis/api v0.0.0-20250908214217-97024824d090
+	google.golang.org/genproto/googleapis/api v0.0.0-20251007200510-49b9836ed3ff
 	google.golang.org/grpc v1.76.0
 	google.golang.org/protobuf v1.36.10
 )
@@ -51,6 +51,6 @@ require (
 	golang.org/x/sys v0.37.0 // indirect
 	golang.org/x/text v0.30.0 // indirect
 	golang.org/x/tools v0.37.0 // indirect
-	google.golang.org/genproto/googleapis/rpc v0.0.0-20250908214217-97024824d090 // indirect
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20251007200510-49b9836ed3ff // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
