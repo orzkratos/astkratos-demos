@@ -3,16 +3,20 @@ package demokratos_test
 import (
 	"fmt"
 	"os"
+	"os/exec"
 	"path/filepath"
+	"slices"
 	"strings"
 	"testing"
 
 	"github.com/orzkratos/demokratos"
 	"github.com/stretchr/testify/require"
 	"github.com/yyle88/eroticgo"
+	"github.com/yyle88/must"
 	"github.com/yyle88/osexec"
 	"github.com/yyle88/osexistpath/osmustexist"
 	"github.com/yyle88/printgo"
+	"github.com/yyle88/rese"
 	"github.com/yyle88/runpath"
 )
 
@@ -247,6 +251,7 @@ func generateChangesFile(t *testing.T, path0, path1, outputPath string) {
 		Exec(
 			"diff",
 			"-ruN",
+			"-U3",              // Show 3 lines of context around each change
 			"--exclude=go.mod", // 忽略 go.mod 文件，避免依赖版本差异影响比较
 			"--exclude=go.sum", // 忽略 go.sum 文件，避免依赖版本差异影响比较
 			"--exclude=bin",    // 忽略 bin 目录，避免编译后的二进制文件差异影响比较
@@ -266,7 +271,8 @@ func generateChangesFile(t *testing.T, path0, path1, outputPath string) {
 	}
 
 	var sourcePath string
-	var adds, cuts []string
+	var diffLines []string
+	var addCount, cutCount int
 
 	ptx := printgo.NewPTX()
 	ptx.Println("# Changes")
@@ -275,14 +281,11 @@ func generateChangesFile(t *testing.T, path0, path1, outputPath string) {
 	ptx.Println()
 
 	processFile := func() {
-		if sourcePath != "" && (len(adds) > 0 || len(cuts) > 0) {
-			ptx.Printf("## %s (+%d -%d)\n\n", sourcePath, len(adds), len(cuts))
+		if sourcePath != "" && (addCount > 0 || cutCount > 0) {
+			ptx.Printf("## %s (+%d -%d)\n\n", sourcePath, addCount, cutCount)
 			ptx.Println("```diff")
-			for _, line := range cuts {
-				ptx.Printf("- %s\n", line)
-			}
-			for _, line := range adds {
-				ptx.Printf("+ %s\n", line)
+			for _, line := range diffLines {
+				ptx.Println(line)
 			}
 			ptx.Println("```")
 			ptx.Println()
@@ -293,7 +296,7 @@ func generateChangesFile(t *testing.T, path0, path1, outputPath string) {
 		switch {
 		case strings.HasPrefix(line, "diff -ruN"):
 			processFile() // 处理上一个文件
-			sourcePath, adds, cuts = "", nil, nil
+			sourcePath, diffLines, addCount, cutCount = "", nil, 0, 0
 
 		case strings.HasPrefix(line, "---"):
 			// 旧文件路径，跳过
@@ -307,11 +310,23 @@ func generateChangesFile(t *testing.T, path0, path1, outputPath string) {
 				}
 			}
 
+		case strings.HasPrefix(line, "@@"):
+			// Chunk heading, include it as context
+			// Chunk 头部，包含作为上下文
+			diffLines = append(diffLines, line)
+
 		case strings.HasPrefix(line, "+") && !strings.HasPrefix(line, "+++"):
-			adds = append(adds, line[1:])
+			diffLines = append(diffLines, line)
+			addCount++
 
 		case strings.HasPrefix(line, "-") && !strings.HasPrefix(line, "---"):
-			cuts = append(cuts, line[1:])
+			diffLines = append(diffLines, line)
+			cutCount++
+
+		case strings.HasPrefix(line, " "):
+			// Context line (space prefix indicates unchanged line)
+			// 上下文行（空格前缀表示未改变的行）
+			diffLines = append(diffLines, line)
 		}
 	}
 
@@ -321,4 +336,104 @@ func generateChangesFile(t *testing.T, path0, path1, outputPath string) {
 	// 写入文件
 	require.NoError(t, os.WriteFile(outputPath, ptx.Bytes(), 0644))
 	t.Logf("Generated %s with differences", outputPath)
+}
+
+func TestGenerateXChanges(t *testing.T) {
+	{
+		treePath, err := exec.LookPath("tree")
+		if err != nil {
+			t.Skip("tree is not available on this system, skipping test case")
+		}
+		t.Logf("Found tree at: %s", treePath)
+	}
+
+	root := runpath.PARENT.Path()
+	t.Log(root)
+
+	excludeSomeNames := []string{
+		".git", // Can be omitted since hidden DIRs are skipped below // 这里可以省略，因为下面会跳过隐藏 DIR
+		"changes",
+		filepath.Base(GetDemo1Path()),
+		filepath.Base(GetDemo2Path()),
+	}
+	t.Log("exclude:", excludeSomeNames)
+
+	// List DIRs except known ones
+	// 列举目录，排除已知的目录
+	var matchNames []string
+	for _, item := range rese.A1(os.ReadDir(root)) {
+		if item.IsDir() {
+			name := item.Name()
+			t.Log("check:", name)
+			if strings.HasPrefix(name, ".") {
+				continue
+			}
+			if slices.Contains(excludeSomeNames, name) {
+				continue
+			}
+			t.Log("match:", name)
+			matchNames = append(matchNames, name)
+		}
+	}
+	t.Log("match:", matchNames)
+
+	//把其它目录的 tree 信息输出出来到文本里
+	outputPath := osmustexist.FILE(filepath.Join(root, "changes", "demos-toolchain-trees.md"))
+	t.Log(outputPath)
+
+	if len(matchNames) == 0 {
+		content := "# Changes\n\n✅ NO CHANGES\n"
+		must.Done(os.WriteFile(outputPath, []byte(content), 0644))
+		return
+	}
+
+	ptx := printgo.NewPTX()
+	ptx.Println("# Changes")
+	ptx.Println()
+
+	// Overview section with sibling projects list
+	// 概览章节，列出兄弟项目
+	ptx.Println("## Overview")
+	ptx.Println()
+	ptx.Println("Sibling projects:")
+	ptx.Println()
+	for _, name := range matchNames {
+		ptx.Fprintf("- [%s](#%s)", name, name)
+		ptx.Println()
+	}
+	ptx.Println()
+
+	// Detailed tree structure for each project
+	// 每个项目的详细目录树结构
+	ptx.Println("## Project Structures")
+	ptx.Println()
+	for idx, name := range matchNames {
+		if idx > 0 {
+			ptx.Println("---")
+			ptx.Println()
+		}
+
+		ptx.Fprintf("### %s", name)
+		ptx.Println()
+		ptx.Println()
+		ptx.Fprintf("**Location**: [%s](../%s)", name, name)
+		ptx.Println()
+		ptx.Println()
+		ptx.Println("```bash")
+		ptx.Fprintf("cd %s && tree --noreport", name)
+		ptx.Println()
+		ptx.Println("```")
+		ptx.Println()
+
+		subRoot := filepath.Join(root, name)
+		t.Log(subRoot)
+		treeOutput := rese.A1(osexec.ExecInPath(subRoot, "tree", "--noreport", "--charset=ascii", "--gitignore", "-I", "node_modules|.git|bin|.idea|.vscode"))
+		t.Log(string(treeOutput))
+
+		ptx.Println("```")
+		ptx.Write(treeOutput)
+		ptx.Println("```")
+		ptx.Println()
+	}
+	must.Done(os.WriteFile(outputPath, ptx.Bytes(), 0644))
 }

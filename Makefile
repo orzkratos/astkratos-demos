@@ -11,13 +11,26 @@ init:
 	# orzkratos-srv-proto: 自动同步神器，让你的服务实现与 proto 接口始终保持一致
 	# 重要提醒: 使用前请务必备份代码或提交到 git，因为会直接修改源文件
 	go install github.com/orzkratos/orzkratos/cmd/orzkratos-srv-proto@latest
+	# wirekratos: Wire 依赖注入增强工具，支持 Kratos 工作区模式和框架标识
+	go install github.com/orzkratos/wirekratos/cmd/wirekratos@latest
 	# depbump: 一键升级所有依赖包，告别版本管理烦恼
 	go install github.com/go-mate/depbump/cmd/depbump@latest
 	# go-lint: 代码质量守护者，自动格式化 + 静态检查
 	go install github.com/go-mate/go-lint/cmd/go-lint@latest
+	# tago: 智能 Git tag 版本管理工具，支持语义化版本自动递增
+	go install github.com/go-mate/tago/cmd/tago@latest
 	# clang-format-batch: 批量格式化 proto 和 cpp 等多种语言代码
 	go install github.com/go-xlan/clang-format/cmd/clang-format-batch@latest
+	# protoc-gen-orzkratos-errors: proto 错误定义自动生成 Go 代码，提供错误码枚举和错误嵌套功能
+	go install github.com/orzkratos/errgenkratos/cmd/protoc-gen-orzkratos-errors@latest
 	@echo "✅ 工具安装完成！现在可以开始愉快地开发啦"
+
+# 使用命令行整理项目中的代码
+fmt:
+	@echo "开始整理所有演示项目的代码..."
+	cd demo1kratos && clang-format-batch --extensions=proto
+	cd demo2kratos && clang-format-batch --extensions=proto
+	@echo "✅ 所有项目的代码整理完成！"
 
 # 构建所有演示项目，包括 proto 生成、配置文件处理、代码生成等
 all:
@@ -114,6 +127,8 @@ merge-step2:
 	# 获取上游仓库的最新代码，不获取标签以避免冲突
 	git fetch --no-tags upstream main
 	@echo "✅ 已获取上游仓库最新代码"
+	# 假如你不小心已经同步源项目的标签，还可以这样让从远程完全同步子项目的标签
+	# git fetch origin --tags --prune --prune-tags
 
 merge-step3:
 	# 确保当前在 main 分支里
@@ -134,6 +149,7 @@ merge-step5:
 	git status
 	# 【重要提醒】假如出现冲突，请严格按照以下步骤操作：
 	# 1. 编辑冲突文件，逐个解决所有 <<<<<<< ======= >>>>>>> 标记的冲突
+	# 【技巧策略】假如是go.mod有冲突，在仅版本不同时，通过比较来挑选较新的版号
 	# 【技巧策略】假如是go.sum有冲突，也可以不手动改，而是在解决完 go.mod 的冲突后执行 go mod tidy 即可解决
 	# 2. 使用 git add <文件名> 将解决后的文件标记为已解决
 	# 3. 继续合并流程：git merge --continue（绝对不要使用 git commit）
